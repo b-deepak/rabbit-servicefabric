@@ -1,0 +1,2 @@
+C:\Users\dbhardwaj\Documents\Learnings\git-repos\rabbit\ServiceFabric-RabbitMQ-Consumer\obj\x64\Debug\ServiceFabric_RabbitMQ_Consumer.sfprojResolveAssemblyReference.cache
+C:\Users\dbhardwaj\Documents\Learnings\git-repos\rabbit-servicefabric\ServiceFabric-RabbitMQ-Consumer\obj\x64\Debug\ServiceFabric_RabbitMQ_Consumer.sfprojResolveAssemblyReference.cache

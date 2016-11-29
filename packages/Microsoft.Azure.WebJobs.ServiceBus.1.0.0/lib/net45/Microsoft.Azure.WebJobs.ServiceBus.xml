@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Azure.WebJobs.ServiceBus</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Azure.WebJobs.ServiceBus.Bindings.BindableServiceBusPath">
+            <summary>
+            Utility class with factory method to create an instance of a strategy class implementing <see cref="T:Microsoft.Azure.WebJobs.ServiceBus.Bindings.IBindableServiceBusPath"/> interface.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.ServiceBus.Bindings.BindableServiceBusPath.Create(System.String)">
+            <summary>
+            A factory method detecting parameters in supplied queue or topic name pattern and creating 
+            an instance of relevant strategy class implementing <see cref="T:Microsoft.Azure.WebJobs.ServiceBus.Bindings.IBindableServiceBusPath"/>.
+            </summary>
+            <param name="queueOrTopicNamePattern">Service Bus queue or topic name pattern containing optional binding parameters.</param>
+            <returns>An object implementing <see cref="T:Microsoft.Azure.WebJobs.ServiceBus.Bindings.IBindableServiceBusPath"/></returns>
+        </member>
+        <member name="T:Microsoft.Azure.WebJobs.ServiceBus.Bindings.BoundServiceBusPath">
+            <summary>
+            Bindable queue or topic path strategy implementation for "degenerate" bindable patterns, 
+            i.e. containing no parameters.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Azure.WebJobs.ServiceBus.Bindings.ParameterizedServiceBusPath">
+            <summary>
+            Omplementation of <see cref="T:Microsoft.Azure.WebJobs.ServiceBus.Bindings.IBindableServiceBusPath"/> strategy for paths 
+            containing one or more parameters.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.ServiceBus.Bindings.BrokeredMessageArgumentBinding.MessageValueBinder.SetValueAsync(System.Object,System.Threading.CancellationToken)">
+            <summary>
+            Sends a BrokeredMessage to the bound queue.
+            </summary>
+            <param name="value">BrokeredMessage instance as retrieved from user's WebJobs method argument.</param>
+            <param name="cancellationToken">a cancellation token</param>
+            <remarks>As this method handles out message instance parameter it distinguishes following possible scenarios:
+            <item>
+            <description>
+            the value is null - no message will be sent;
+            </description>
+            </item>
+            <item>
+            <description>
+            the value is an instance with empty content - a message with empty content will be sent;
+            </description>
+            </item>
+            <item>
+            <description>
+            the value is an instance with non-empty content - a message with content from given argument will be sent.
+            </description>
+            </item>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.ServiceBus.Bindings.ByteArrayArgumentBindingProvider.ByteArrayArgumentBinding.BindAsync(Microsoft.Azure.WebJobs.ServiceBus.Bindings.ServiceBusEntity,Microsoft.Azure.WebJobs.Host.Bindings.ValueBindingContext)">
+            <remarks>
+            As this method handles out byte array parameter it distinguishes following possible scenarios:
+            <item>
+            <description>
+            If the value is <see langword="null"/>, no message will be sent.
+            </description>
+            </item>
+            <item>
+            <description>
+            If the value is an empty byte array, a message with empty content will be sent.
+            </description>
+            </item>
+            <item>
+            <description>
+            If the value is a non-empty byte array, a message with content from given argument will be sent.
+            </description>
+            </item>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.ServiceBus.Bindings.StringArgumentBindingProvider.StringArgumentBinding.BindAsync(Microsoft.Azure.WebJobs.ServiceBus.Bindings.ServiceBusEntity,Microsoft.Azure.WebJobs.Host.Bindings.ValueBindingContext)">
+            <remarks>
+            As this method handles out string parameter it distinguishes following possible scenarios:
+            <item>
+            <description>
+            If the value is <see langword="null"/>, no message will be sent.
+            </description>
+            </item>
+            <item>
+            <description>
+            If the value is an empty string, a message with empty content will be sent.
+            </description>
+            </item>
+            <item>
+            <description>
+            If the value is a non-empty string, a message with content from given argument will be sent.
+            </description>
+            </item>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.ServiceBus.Listeners.NamespaceManagerExtensions.SplitQueuePath(System.String)">
+            <summary>
+            Split queue or subscription path into parent and DLQ parts if the latter exists. 
+            </summary>
+            <param name="path">Not empty string with Azure ServiceBus queue or subscription path.</param>
+            <returns>Array of strings, where the first mandatory element is a parent queue path 
+            if given path ends with the DLQ suffix or the original queue path otherwise.</returns>
+        </member>
+        <member name="T:Microsoft.Azure.WebJobs.ServiceBusAttribute">
+            <summary>Binds to Azure Service Bus Queues and Topics.</summary>
+            <remarks>
+            The method parameter type can be one of the following:
+            <list type="bullet">
+            <item><description>BrokeredMessage (out param)</description></item>
+            <item><description><see cref="T:System.String"/> (out param)</description></item>
+            <item><description><see cref="T:byte[]"/> (out param)</description></item>
+            <item><description>A user-defined type (out param, serialized as JSON)</description></item>
+            <item><description>
+            <see cref="T:System.Collections.Generic.ICollection`1"/> of these types (to enqueue multiple messages via <see cref="M:System.Collections.Generic.ICollection`1.Add(`0)"/>
+            </description></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.ServiceBusAttribute.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:Microsoft.Azure.WebJobs.ServiceBusAttribute"/> class.</summary>
+            <param name="queueOrTopicName">The name of the queue or topic to which to bind.</param>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.ServiceBusAttribute.QueueOrTopicName">
+            <summary>Gets the name of the queue or topic to which to bind.</summary>
+        </member>
+        <member name="T:Microsoft.Azure.WebJobs.ServiceBusTriggerAttribute">
+            <summary>
+            Represents an attribute that binds a parameter to a Service Bus Queue message, causing the method to run when a
+            message is enqueued.
+            </summary>
+            <remarks>
+            The method parameter type can be one of the following:
+            <list type="bullet">
+            <item><description>BrokeredMessage</description></item>
+            <item><description><see cref="T:System.String"/></description></item>
+            <item><description><see cref="T:byte[]"/></description></item>
+            <item><description>A user-defined type (serialized as JSON)</description></item>
+            </list>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.ServiceBusTriggerAttribute.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:Microsoft.Azure.WebJobs.ServiceBusTriggerAttribute"/> class.</summary>
+            <param name="queueName">The name of the queue to which to bind.</param>
+        </member>
+        <member name="M:Microsoft.Azure.WebJobs.ServiceBusTriggerAttribute.#ctor(System.String,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:Microsoft.Azure.WebJobs.ServiceBusTriggerAttribute"/> class.</summary>
+            <param name="topicName">The name of the topic to which to bind.</param>
+            <param name="subscriptionName">The name of the subscription in <paramref name="topicName"/> to which to bind.</param>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.ServiceBusTriggerAttribute.QueueName">
+            <summary>Gets the name of the queue to which to bind.</summary>
+            <remarks>When binding to a subscription in a topic, returns <see langword="null"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.ServiceBusTriggerAttribute.TopicName">
+            <summary>Gets the name of the topic to which to bind.</summary>
+            <remarks>When binding to a queue, returns <see langword="null"/>.</remarks>
+        </member>
+        <member name="P:Microsoft.Azure.WebJobs.ServiceBusTriggerAttribute.SubscriptionName">
+            <summary>Gets the name of the subscription in <see cref="P:Microsoft.Azure.WebJobs.ServiceBusTriggerAttribute.TopicName"/> to which to bind.</summary>
+            <remarks>When binding to a queue, returns <see langword="null"/>.</remarks>
+        </member>
+    </members>
+</doc>
